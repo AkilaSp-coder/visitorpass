@@ -2,13 +2,13 @@
 
 emailjs.init("GfVsTCpK0y85WfqZS");
 
-/* GET VISITORS */
+/* VISITORS */
 
 let visitors =
 JSON.parse(localStorage.getItem("visitors"))
 || [];
 
-/* GET URL PARAMS */
+/* URL PARAMS */
 
 const params =
 new URLSearchParams(window.location.search);
@@ -33,14 +33,14 @@ visitor.status = status;
 
 });
 
-/* SAVE UPDATED DATA */
+/* SAVE */
 
 localStorage.setItem(
 "visitors",
 JSON.stringify(visitors)
 );
 
-/* POPUP */
+/* ALERT */
 
 alert(
 "Visitor " + status + " Successfully"
@@ -48,7 +48,7 @@ alert(
 
 }
 
-/* DISPLAY TABLE */
+/* PAGE LOAD */
 
 window.onload = function(){
 
@@ -57,6 +57,134 @@ displayVisitors();
 updateBell();
 
 };
+
+/* CAMERA ELEMENTS */
+
+const video =
+document.getElementById("camera");
+
+const canvas =
+document.getElementById("canvas");
+
+const preview =
+document.getElementById("preview");
+
+const captureBtn =
+document.getElementById("captureBtn");
+
+const openCameraBtn =
+document.getElementById("openCameraBtn");
+
+/* IMAGE VARIABLE */
+
+let capturedImage = "";
+
+let stream;
+
+/* OPEN CAMERA */
+
+if(openCameraBtn){
+
+openCameraBtn.addEventListener("click", async function(){
+
+try{
+
+stream =
+await navigator.mediaDevices.getUserMedia({
+
+video:true
+
+});
+
+/* SHOW CAMERA */
+
+video.style.display =
+"block";
+
+captureBtn.style.display =
+"block";
+
+/* STREAM */
+
+video.srcObject =
+stream;
+
+}
+catch(error){
+
+console.log(error);
+
+alert(
+"Camera Access Denied"
+);
+
+}
+
+});
+
+}
+
+/* TAKE PHOTO */
+
+if(captureBtn){
+
+captureBtn.addEventListener("click", function(){
+
+canvas.width =
+video.videoWidth;
+
+canvas.height =
+video.videoHeight;
+
+const context =
+canvas.getContext("2d");
+
+context.drawImage(
+
+video,
+0,
+0,
+canvas.width,
+canvas.height
+
+);
+
+/* COMPRESSED IMAGE */
+
+capturedImage =
+canvas.toDataURL("image/jpeg",0.2);
+
+/* PREVIEW */
+
+preview.src =
+capturedImage;
+
+preview.style.display =
+"block";
+
+/* STOP CAMERA */
+
+if(stream){
+
+stream.getTracks().forEach(function(track){
+
+track.stop();
+
+});
+
+video.srcObject = null;
+
+video.style.display =
+"none";
+
+captureBtn.style.display =
+"none";
+
+}
+
+});
+
+}
 
 /* FORM */
 
@@ -80,7 +208,19 @@ document.getElementById("email").value;
 let purpose =
 document.getElementById("purpose").value;
 
-/* OBJECT */
+/* PHOTO CHECK */
+
+if(!capturedImage){
+
+alert(
+"Please Take Photo"
+);
+
+return;
+
+}
+
+/* VISITOR OBJECT */
 
 let visitor = {
 
@@ -92,7 +232,9 @@ email: email,
 
 purpose: purpose,
 
-status: "Pending"
+status: "Pending",
+
+photo: capturedImage
 
 };
 
@@ -101,11 +243,14 @@ status: "Pending"
 visitors.push(visitor);
 
 localStorage.setItem(
+
 "visitors",
+
 JSON.stringify(visitors)
+
 );
 
-/* EMAIL */
+/* SEND EMAIL */
 
 sendEmail(visitor);
 
@@ -120,7 +265,7 @@ sound.play();
 
 }
 
-/* POPUP */
+/* SUCCESS */
 
 alert(
 "Visitor Request Submitted Successfully"
@@ -129,6 +274,13 @@ alert(
 /* RESET */
 
 form.reset();
+
+preview.style.display =
+"none";
+
+capturedImage = "";
+
+/* UPDATE */
 
 updateBell();
 
@@ -151,7 +303,7 @@ return;
 
 table.innerHTML = "";
 
-/* REFRESH DATA */
+/* REFRESH */
 
 visitors =
 JSON.parse(localStorage.getItem("visitors"))
@@ -165,7 +317,7 @@ table.innerHTML = `
 
 <tr>
 
-<td colspan="5"
+<td colspan="6"
 class="text-center text-danger">
 
 No Visitors Found
@@ -189,6 +341,19 @@ table.innerHTML += `
 <tr>
 
 <td>${visitor.id}</td>
+
+<td>
+
+<img
+src="${visitor.photo}"
+width="70"
+height="70"
+style="
+border-radius:50%;
+object-fit:cover;
+border:2px solid #007bff;">
+
+</td>
 
 <td>${visitor.name}</td>
 
@@ -222,7 +387,7 @@ visitors.length;
 
 }
 
-/* EMAIL */
+/* SEND EMAIL */
 
 function sendEmail(visitor){
 
@@ -233,6 +398,8 @@ name: visitor.name,
 email: visitor.email,
 
 purpose: visitor.purpose,
+
+photo: visitor.photo,
 
 accept_url:
 "https://visitorpass-gamma.vercel.app/?status=Accepted&id=" + visitor.id,
@@ -254,7 +421,9 @@ params
 
 .then(function(){
 
-console.log("Mail Sent");
+console.log(
+"Mail Sent Successfully"
+);
 
 })
 
@@ -262,7 +431,9 @@ console.log("Mail Sent");
 
 console.log(error);
 
-alert("Mail Failed");
+alert(
+"Mail Failed"
+);
 
 });
 
