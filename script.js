@@ -2,56 +2,25 @@
 
 emailjs.init("GfVsTCpK0y85WfqZS");
 
-/* GET DATA */
-
-let visitors =
-JSON.parse(localStorage.getItem("visitors")) || [];
-
-/* GET STATUS FROM URL */
+/* GET MESSAGE FROM URL */
 
 const params =
 new URLSearchParams(window.location.search);
 
-const status =
-params.get("status");
+const message =
+params.get("message");
 
-/* UPDATE STATUS */
+/* SHOW POPUP */
 
-if(status){
-
-if(visitors.length > 0){
-
-visitors[visitors.length - 1].status = status;
-
-localStorage.setItem(
-"visitors",
-JSON.stringify(visitors)
-);
-
-}
-
-/* POPUP */
+if(message){
 
 alert(
-"Visitor " + status + " Successfully"
+"Visitor " + message + " Successfully"
 );
-
-/* REDIRECT */
-
-window.location.href =
-"visitors.html";
 
 }
 
-/* PAGE LOAD */
-
-window.onload = function(){
-
-displayVisitors();
-
-};
-
-/* FORM SUBMIT */
+/* FORM */
 
 let form =
 document.getElementById("visitorForm");
@@ -73,30 +42,17 @@ document.getElementById("email").value;
 let purpose =
 document.getElementById("purpose").value;
 
-/* CREATE OBJECT */
+/* OBJECT */
 
 let visitor = {
-
-id: Date.now(),
 
 name: name,
 
 email: email,
 
-purpose: purpose,
-
-status: "Pending"
+purpose: purpose
 
 };
-
-/* SAVE */
-
-visitors.push(visitor);
-
-localStorage.setItem(
-"visitors",
-JSON.stringify(visitors)
-);
 
 /* SEND EMAIL */
 
@@ -113,7 +69,7 @@ sound.play();
 
 }
 
-/* SUCCESS */
+/* POPUP */
 
 alert(
 "Visitor Request Submitted Successfully"
@@ -122,60 +78,6 @@ alert(
 /* RESET */
 
 form.reset();
-
-/* REFRESH TABLE */
-
-displayVisitors();
-
-});
-
-}
-
-/* DISPLAY TABLE */
-
-function displayVisitors(){
-
-let table =
-document.getElementById("visitorTable");
-
-if(!table){
-
-return;
-
-}
-
-/* CLEAR TABLE */
-
-table.innerHTML = "";
-
-/* GET UPDATED DATA */
-
-visitors =
-JSON.parse(localStorage.getItem("visitors")) || [];
-
-/* LOOP */
-
-visitors.forEach(function(visitor){
-
-let row = `
-
-<tr>
-
-<td>${visitor.id}</td>
-
-<td>${visitor.name}</td>
-
-<td>${visitor.email}</td>
-
-<td>${visitor.purpose}</td>
-
-<td>${visitor.status}</td>
-
-</tr>
-
-`;
-
-table.innerHTML += row;
 
 });
 
@@ -214,6 +116,8 @@ console.log("Mail Sent");
 .catch(function(error){
 
 console.log(error);
+
+alert("Mail Failed");
 
 });
 
