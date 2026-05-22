@@ -21,6 +21,8 @@ href="style.css">
 
 <body>
 
+<!-- NAVBAR -->
+
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
 
 <div class="container">
@@ -32,7 +34,9 @@ Visitor Pass
 
 </a>
 
-<ul class="navbar-nav ms-auto d-flex flex-row">
+<ul class="navbar-nav ms-auto d-flex flex-row align-items-center">
+
+<!-- HOME -->
 
 <li class="nav-item mx-3">
 
@@ -45,6 +49,8 @@ Home
 
 </li>
 
+<!-- VISITORS -->
+
 <li class="nav-item mx-3">
 
 <a class="nav-link text-white"
@@ -56,12 +62,22 @@ Visitors
 
 </li>
 
+<!-- BELL -->
+
 <li class="nav-item mx-3">
 
-<a class="nav-link text-white"
-href="contact.html">
+<a class="nav-link text-white position-relative"
+href="visitors.html">
 
-Contact
+🔔
+
+<span
+id="bellCount"
+class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+0
+
+</span>
 
 </a>
 
@@ -73,12 +89,16 @@ Contact
 
 </nav>
 
+<!-- FORM -->
+
 <div class="container">
 
 <div class="form-box">
 
 <h2 class="text-center mb-4">
+
 Visitor Registration
+
 </h2>
 
 <form id="visitorForm">
@@ -117,6 +137,8 @@ Submit
 
 </div>
 
+<!-- AUDIO -->
+
 <audio id="notifySound">
 
 <source
@@ -125,7 +147,11 @@ type="audio/mpeg">
 
 </audio>
 
+<!-- EMAIL JS -->
+
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<!-- SCRIPT -->
 
 <script src="script.js"></script>
 

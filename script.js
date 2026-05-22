@@ -2,23 +2,61 @@
 
 emailjs.init("GfVsTCpK0y85WfqZS");
 
-/* GET MESSAGE FROM URL */
+/* GET VISITORS */
+
+let visitors =
+JSON.parse(localStorage.getItem("visitors"))
+|| [];
+
+/* GET URL PARAMS */
 
 const params =
 new URLSearchParams(window.location.search);
 
-const message =
-params.get("message");
+const status =
+params.get("status");
 
-/* SHOW POPUP */
+const id =
+params.get("id");
 
-if(message){
+/* UPDATE STATUS */
+
+if(status && id){
+
+visitors.forEach(function(visitor){
+
+if(visitor.id == id){
+
+visitor.status = status;
+
+}
+
+});
+
+/* SAVE UPDATED DATA */
+
+localStorage.setItem(
+"visitors",
+JSON.stringify(visitors)
+);
+
+/* POPUP */
 
 alert(
-"Visitor " + message + " Successfully"
+"Visitor " + status + " Successfully"
 );
 
 }
+
+/* DISPLAY TABLE */
+
+window.onload = function(){
+
+displayVisitors();
+
+updateBell();
+
+};
 
 /* FORM */
 
@@ -31,7 +69,7 @@ form.addEventListener("submit", function(event){
 
 event.preventDefault();
 
-/* GET VALUES */
+/* VALUES */
 
 let name =
 document.getElementById("name").value;
@@ -46,15 +84,28 @@ document.getElementById("purpose").value;
 
 let visitor = {
 
+id: Date.now(),
+
 name: name,
 
 email: email,
 
-purpose: purpose
+purpose: purpose,
+
+status: "Pending"
 
 };
 
-/* SEND EMAIL */
+/* SAVE */
+
+visitors.push(visitor);
+
+localStorage.setItem(
+"visitors",
+JSON.stringify(visitors)
+);
+
+/* EMAIL */
 
 sendEmail(visitor);
 
@@ -79,11 +130,99 @@ alert(
 
 form.reset();
 
+updateBell();
+
 });
 
 }
 
-/* SEND EMAIL */
+/* DISPLAY TABLE */
+
+function displayVisitors(){
+
+let table =
+document.getElementById("visitorTable");
+
+if(!table){
+
+return;
+
+}
+
+table.innerHTML = "";
+
+/* REFRESH DATA */
+
+visitors =
+JSON.parse(localStorage.getItem("visitors"))
+|| [];
+
+/* EMPTY */
+
+if(visitors.length === 0){
+
+table.innerHTML = `
+
+<tr>
+
+<td colspan="5"
+class="text-center text-danger">
+
+No Visitors Found
+
+</td>
+
+</tr>
+
+`;
+
+return;
+
+}
+
+/* LOOP */
+
+visitors.forEach(function(visitor){
+
+table.innerHTML += `
+
+<tr>
+
+<td>${visitor.id}</td>
+
+<td>${visitor.name}</td>
+
+<td>${visitor.email}</td>
+
+<td>${visitor.purpose}</td>
+
+<td>${visitor.status}</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+/* BELL */
+
+function updateBell(){
+
+let bell =
+document.getElementById("bellCount");
+
+if(bell){
+
+bell.innerText =
+visitors.length;
+
+}
+
+}
+
+/* EMAIL */
 
 function sendEmail(visitor){
 
@@ -93,7 +232,13 @@ name: visitor.name,
 
 email: visitor.email,
 
-purpose: visitor.purpose
+purpose: visitor.purpose,
+
+accept_url:
+"https://visitorpass-gamma.vercel.app/?status=Accepted&id=" + visitor.id,
+
+reject_url:
+"https://visitorpass-gamma.vercel.app/?status=Rejected&id=" + visitor.id
 
 };
 
