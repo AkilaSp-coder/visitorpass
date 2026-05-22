@@ -7,9 +7,45 @@ emailjs.init("GfVsTCpK0y85WfqZS");
 let visitors =
 JSON.parse(localStorage.getItem("visitors")) || [];
 
-/* SHOW TABLE */
+/* GET STATUS FROM URL */
 
-window.onload = function () {
+const params =
+new URLSearchParams(window.location.search);
+
+const status =
+params.get("status");
+
+/* UPDATE STATUS */
+
+if(status){
+
+if(visitors.length > 0){
+
+visitors[visitors.length - 1].status = status;
+
+localStorage.setItem(
+"visitors",
+JSON.stringify(visitors)
+);
+
+}
+
+/* POPUP */
+
+alert(
+"Visitor " + status + " Successfully"
+);
+
+/* REDIRECT */
+
+window.location.href =
+"visitors.html";
+
+}
+
+/* PAGE LOAD */
+
+window.onload = function(){
 
 displayVisitors();
 
@@ -26,7 +62,7 @@ form.addEventListener("submit", function(event){
 
 event.preventDefault();
 
-/* VALUES */
+/* GET VALUES */
 
 let name =
 document.getElementById("name").value;
@@ -37,7 +73,7 @@ document.getElementById("email").value;
 let purpose =
 document.getElementById("purpose").value;
 
-/* OBJECT */
+/* CREATE OBJECT */
 
 let visitor = {
 
@@ -62,7 +98,7 @@ localStorage.setItem(
 JSON.stringify(visitors)
 );
 
-/* EMAIL */
+/* SEND EMAIL */
 
 sendEmail(visitor);
 
@@ -77,7 +113,7 @@ sound.play();
 
 }
 
-/* POPUP */
+/* SUCCESS */
 
 alert(
 "Visitor Request Submitted Successfully"
@@ -86,6 +122,10 @@ alert(
 /* RESET */
 
 form.reset();
+
+/* REFRESH TABLE */
+
+displayVisitors();
 
 });
 
@@ -104,7 +144,14 @@ return;
 
 }
 
+/* CLEAR TABLE */
+
 table.innerHTML = "";
+
+/* GET UPDATED DATA */
+
+visitors =
+JSON.parse(localStorage.getItem("visitors")) || [];
 
 /* LOOP */
 
