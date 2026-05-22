@@ -1,15 +1,32 @@
+/* EMAIL JS */
+
 emailjs.init("GfVsTCpK0y85WfqZS");
 
+/* GET DATA */
+
 let visitors =
-JSON.parse(localStorage.getItem("visitors"))
-|| [];
+JSON.parse(localStorage.getItem("visitors")) || [];
+
+/* SHOW TABLE */
+
+window.onload = function () {
 
 displayVisitors();
 
-document.getElementById("visitorForm")
-.addEventListener("submit", function(event){
+};
+
+/* FORM SUBMIT */
+
+let form =
+document.getElementById("visitorForm");
+
+if(form){
+
+form.addEventListener("submit", function(event){
 
 event.preventDefault();
+
+/* VALUES */
 
 let name =
 document.getElementById("name").value;
@@ -20,12 +37,23 @@ document.getElementById("email").value;
 let purpose =
 document.getElementById("purpose").value;
 
+/* OBJECT */
+
 let visitor = {
+
 id: Date.now(),
+
 name: name,
+
 email: email,
-purpose: purpose
+
+purpose: purpose,
+
+status: "Pending"
+
 };
+
+/* SAVE */
 
 visitors.push(visitor);
 
@@ -34,25 +62,55 @@ localStorage.setItem(
 JSON.stringify(visitors)
 );
 
-displayVisitors();
+/* EMAIL */
 
 sendEmail(visitor);
 
-document.getElementById("visitorForm")
-.reset();
+/* SOUND */
+
+let sound =
+document.getElementById("notifySound");
+
+if(sound){
+
+sound.play();
+
+}
+
+/* POPUP */
+
+alert(
+"Visitor Request Submitted Successfully"
+);
+
+/* RESET */
+
+form.reset();
 
 });
+
+}
+
+/* DISPLAY TABLE */
 
 function displayVisitors(){
 
 let table =
 document.getElementById("visitorTable");
 
+if(!table){
+
+return;
+
+}
+
 table.innerHTML = "";
+
+/* LOOP */
 
 visitors.forEach(function(visitor){
 
-table.innerHTML += `
+let row = `
 
 <tr>
 
@@ -64,37 +122,49 @@ table.innerHTML += `
 
 <td>${visitor.purpose}</td>
 
+<td>${visitor.status}</td>
+
 </tr>
 
 `;
 
+table.innerHTML += row;
+
 });
 
 }
+
+/* SEND EMAIL */
 
 function sendEmail(visitor){
 
 let params = {
 
 name: visitor.name,
+
 email: visitor.email,
+
 purpose: visitor.purpose
 
 };
 
 emailjs.send(
+
 "service_9wpgbu9",
+
 "template_s3sx5q5",
+
 params
+
 )
+
 .then(function(){
 
-alert("Mail Sent Successfully!");
+console.log("Mail Sent");
 
 })
-.catch(function(error){
 
-alert("Mail Failed!");
+.catch(function(error){
 
 console.log(error);
 

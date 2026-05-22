@@ -1,12 +1,29 @@
 body{
 background:#f4f4f4;
+font-family:Arial;
 }
 
-.card{
-border:none;
+.form-box{
+
+width:500px;
+
+margin:50px auto;
+
+background:white;
+
+padding:30px;
+
 border-radius:15px;
+
+box-shadow:0 0 15px rgba(0,0,0,0.1);
+
 }
 
-h2,h3{
+.navbar-brand{
+font-size:30px;
+font-weight:bold;
+}
+
+h2{
 font-weight:bold;
 }
