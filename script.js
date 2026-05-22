@@ -1,14 +1,20 @@
-/* EMAIL JS */
+/* =========================
+   EMAIL JS
+========================= */
 
 emailjs.init("GfVsTCpK0y85WfqZS");
 
-/* VISITORS */
+/* =========================
+   VISITORS STORAGE
+========================= */
 
 let visitors =
 JSON.parse(localStorage.getItem("visitors"))
 || [];
 
-/* URL PARAMS */
+/* =========================
+   URL PARAMS
+========================= */
 
 const params =
 new URLSearchParams(window.location.search);
@@ -19,7 +25,9 @@ params.get("status");
 const id =
 params.get("id");
 
-/* UPDATE STATUS */
+/* =========================
+   UPDATE STATUS
+========================= */
 
 if(status && id){
 
@@ -40,7 +48,7 @@ localStorage.setItem(
 JSON.stringify(visitors)
 );
 
-/* ALERT */
+/* POPUP */
 
 alert(
 "Visitor " + status + " Successfully"
@@ -48,7 +56,9 @@ alert(
 
 }
 
-/* PAGE LOAD */
+/* =========================
+   PAGE LOAD
+========================= */
 
 window.onload = function(){
 
@@ -58,7 +68,9 @@ updateBell();
 
 };
 
-/* CAMERA ELEMENTS */
+/* =========================
+   CAMERA ELEMENTS
+========================= */
 
 const video =
 document.getElementById("camera");
@@ -75,13 +87,15 @@ document.getElementById("captureBtn");
 const openCameraBtn =
 document.getElementById("openCameraBtn");
 
-/* IMAGE VARIABLE */
+/* IMAGE */
 
 let capturedImage = "";
 
-let stream;
+let stream = null;
 
-/* OPEN CAMERA */
+/* =========================
+   OPEN CAMERA
+========================= */
 
 if(openCameraBtn){
 
@@ -89,10 +103,27 @@ openCameraBtn.addEventListener("click", async function(){
 
 try{
 
+/* CHECK SUPPORT */
+
+if(!navigator.mediaDevices ||
+
+!navigator.mediaDevices.getUserMedia){
+
+alert(
+"Camera Not Supported"
+);
+
+return;
+
+}
+
+/* CAMERA */
+
 stream =
 await navigator.mediaDevices.getUserMedia({
 
-video:true
+video:true,
+audio:false
 
 });
 
@@ -109,13 +140,17 @@ captureBtn.style.display =
 video.srcObject =
 stream;
 
+/* PLAY */
+
+await video.play();
+
 }
 catch(error){
 
 console.log(error);
 
 alert(
-"Camera Access Denied"
+"Please Allow Camera Permission"
 );
 
 }
@@ -124,11 +159,25 @@ alert(
 
 }
 
-/* TAKE PHOTO */
+/* =========================
+   TAKE PHOTO
+========================= */
 
 if(captureBtn){
 
 captureBtn.addEventListener("click", function(){
+
+if(!stream){
+
+alert(
+"Open Camera First"
+);
+
+return;
+
+}
+
+/* SIZE */
 
 canvas.width =
 video.videoWidth;
@@ -136,8 +185,12 @@ video.videoWidth;
 canvas.height =
 video.videoHeight;
 
+/* CONTEXT */
+
 const context =
 canvas.getContext("2d");
+
+/* DRAW */
 
 context.drawImage(
 
@@ -149,10 +202,13 @@ canvas.height
 
 );
 
-/* COMPRESSED IMAGE */
+/* IMAGE */
 
 capturedImage =
-canvas.toDataURL("image/jpeg",0.2);
+canvas.toDataURL(
+"image/jpeg",
+0.3
+);
 
 /* PREVIEW */
 
@@ -164,13 +220,13 @@ preview.style.display =
 
 /* STOP CAMERA */
 
-if(stream){
-
 stream.getTracks().forEach(function(track){
 
 track.stop();
 
 });
+
+/* RESET CAMERA */
 
 video.srcObject = null;
 
@@ -180,13 +236,15 @@ video.style.display =
 captureBtn.style.display =
 "none";
 
-}
+stream = null;
 
 });
 
 }
 
-/* FORM */
+/* =========================
+   FORM SUBMIT
+========================= */
 
 let form =
 document.getElementById("visitorForm");
@@ -208,7 +266,7 @@ document.getElementById("email").value;
 let purpose =
 document.getElementById("purpose").value;
 
-/* PHOTO CHECK */
+/* CHECK PHOTO */
 
 if(!capturedImage){
 
@@ -220,7 +278,7 @@ return;
 
 }
 
-/* VISITOR OBJECT */
+/* OBJECT */
 
 let visitor = {
 
@@ -261,7 +319,26 @@ document.getElementById("notifySound");
 
 if(sound){
 
-sound.play();
+sound.currentTime = 0;
+
+sound.play()
+
+.then(function(){
+
+console.log(
+"Sound Played"
+);
+
+})
+
+.catch(function(error){
+
+console.log(
+"Sound Error:",
+error
+);
+
+});
 
 }
 
@@ -282,13 +359,17 @@ capturedImage = "";
 
 /* UPDATE */
 
+displayVisitors();
+
 updateBell();
 
 });
 
 }
 
-/* DISPLAY TABLE */
+/* =========================
+   DISPLAY VISITORS
+========================= */
 
 function displayVisitors(){
 
@@ -317,8 +398,8 @@ table.innerHTML = `
 
 <tr>
 
-<td colspan="6"
-class="text-center text-danger">
+<td colspan="7"
+class="text-center text-danger fw-bold">
 
 No Visitors Found
 
@@ -336,9 +417,29 @@ return;
 
 visitors.forEach(function(visitor){
 
+let statusColor = "";
+
+if(visitor.status === "Accepted"){
+
+statusColor = "success";
+
+}
+
+else if(visitor.status === "Rejected"){
+
+statusColor = "danger";
+
+}
+
+else{
+
+statusColor = "warning";
+
+}
+
 table.innerHTML += `
 
-<tr>
+<tr class="align-middle">
 
 <td>${visitor.id}</td>
 
@@ -351,17 +452,49 @@ height="70"
 style="
 border-radius:50%;
 object-fit:cover;
-border:2px solid #007bff;">
+border:3px solid #0d6efd;">
 
 </td>
 
-<td>${visitor.name}</td>
+<td class="fw-bold">
 
-<td>${visitor.email}</td>
+${visitor.name}
 
-<td>${visitor.purpose}</td>
+</td>
 
-<td>${visitor.status}</td>
+<td>
+
+${visitor.email}
+
+</td>
+
+<td>
+
+${visitor.purpose}
+
+</td>
+
+<td>
+
+<span class="badge bg-${statusColor} p-2">
+
+${visitor.status}
+
+</span>
+
+</td>
+
+<td>
+
+<button
+class="btn btn-danger btn-sm"
+onclick="deleteVisitor(${visitor.id})">
+
+🗑 Delete
+
+</button>
+
+</td>
 
 </tr>
 
@@ -371,7 +504,49 @@ border:2px solid #007bff;">
 
 }
 
-/* BELL */
+/* =========================
+   DELETE VISITOR
+========================= */
+
+function deleteVisitor(id){
+
+let confirmDelete =
+confirm(
+"Delete this visitor?"
+);
+
+if(confirmDelete){
+
+visitors =
+visitors.filter(function(visitor){
+
+return visitor.id !== id;
+
+});
+
+/* SAVE */
+
+localStorage.setItem(
+
+"visitors",
+
+JSON.stringify(visitors)
+
+);
+
+/* REFRESH */
+
+displayVisitors();
+
+updateBell();
+
+}
+
+}
+
+/* =========================
+   BELL COUNT
+========================= */
 
 function updateBell(){
 
@@ -387,7 +562,9 @@ visitors.length;
 
 }
 
-/* SEND EMAIL */
+/* =========================
+   SEND EMAIL
+========================= */
 
 function sendEmail(visitor){
 

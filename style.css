@@ -1,29 +1,433 @@
+/* =========================
+   BODY
+========================= */
+
 body{
-background:#f4f4f4;
-font-family:Arial;
+
+margin:0;
+
+padding:0;
+
+font-family:Arial,sans-serif;
+
+background:url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1600');
+
+background-size:cover;
+
+background-position:center;
+
+background-repeat:no-repeat;
+
+background-attachment:fixed;
+
+min-height:100vh;
+
+overflow-x:hidden;
+
 }
 
-.form-box{
+/* =========================
+   OVERLAY
+========================= */
 
-width:500px;
+.overlay{
 
-margin:50px auto;
+background:rgba(0,0,0,0.65);
+
+min-height:100vh;
+
+padding-bottom:50px;
+
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+
+background:linear-gradient(
+90deg,
+#111827,
+#1f2937
+) !important;
+
+padding-top:14px;
+
+padding-bottom:14px;
+
+box-shadow:0 6px 18px rgba(0,0,0,0.35);
+
+}
+
+/* =========================
+   LOGO BOX
+========================= */
+
+.logo-box{
+
+width:78px;
+
+height:78px;
 
 background:white;
 
-padding:30px;
+border-radius:18px;
 
-border-radius:15px;
+padding:6px;
 
-box-shadow:0 0 15px rgba(0,0,0,0.1);
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+margin-right:14px;
+
+box-shadow:0 6px 18px rgba(0,0,0,0.35);
+
+border:3px solid #2196f3;
+
+overflow:hidden;
+
+flex-shrink:0;
 
 }
 
-.navbar-brand{
-font-size:30px;
-font-weight:bold;
+/* =========================
+   LOGO IMAGE
+========================= */
+
+.logo-img{
+
+width:100%;
+
+height:100%;
+
+object-fit:contain;
+
+transition:0.4s;
+
+display:block;
+
 }
 
-h2{
+.logo-img:hover{
+
+transform:scale(1.08);
+
+}
+
+/* =========================
+   COMPANY TITLE
+========================= */
+
+.company-title{
+
+margin:0;
+
+font-weight:800;
+
+color:white;
+
+letter-spacing:1px;
+
+font-size:32px;
+
+text-shadow:0 4px 10px rgba(0,0,0,0.5);
+
+}
+
+/* =========================
+   COMPANY SUBTITLE
+========================= */
+
+.company-subtitle{
+
+margin:0;
+
+color:#cfd8dc;
+
+font-size:13px;
+
+letter-spacing:3px;
+
+font-weight:600;
+
+}
+
+/* =========================
+   NAV LINKS
+========================= */
+
+.nav-link{
+
+font-size:17px;
+
+font-weight:600;
+
+transition:0.3s;
+
+}
+
+.nav-link:hover{
+
+color:#0d6efd !important;
+
+}
+
+/* =========================
+   CARD
+========================= */
+
+.registration-card{
+
+background:rgba(255,255,255,0.95);
+
+backdrop-filter:blur(10px);
+
+border:none;
+
+border-radius:24px;
+
+padding:35px;
+
+box-shadow:0 15px 35px rgba(0,0,0,0.35);
+
+transition:0.4s;
+
+}
+
+.registration-card:hover{
+
+transform:translateY(-5px);
+
+}
+
+/* =========================
+   FORM INPUT
+========================= */
+
+.form-control{
+
+height:52px;
+
+border-radius:14px;
+
+font-size:16px;
+
+border:1px solid #d1d5db;
+
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn{
+
+height:52px;
+
+border-radius:14px;
+
+font-size:17px;
+
 font-weight:bold;
+
+}
+
+/* =========================
+   CAMERA
+========================= */
+
+#camera{
+
+display:none;
+
+height:300px;
+
+background:black;
+
+object-fit:cover;
+
+border-radius:18px;
+
+width:100%;
+
+}
+
+/* =========================
+   PREVIEW IMAGE
+========================= */
+
+#preview{
+
+display:none;
+
+width:160px;
+
+height:160px;
+
+border-radius:18px;
+
+object-fit:cover;
+
+margin-bottom:20px;
+
+border:4px solid #0d6efd;
+
+box-shadow:0 4px 15px rgba(0,0,0,0.35);
+
+}
+
+/* =========================
+   CONTACT BOX
+========================= */
+
+.contact-box{
+
+background:#f8f9fa;
+
+padding:22px;
+
+border-radius:18px;
+
+margin-top:10px;
+
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table{
+
+background:white;
+
+border-radius:16px;
+
+overflow:hidden;
+
+}
+
+/* =========================
+   TABLE HEAD
+========================= */
+
+.table-dark{
+
+background:#111827 !important;
+
+}
+
+/* =========================
+   VISITOR PHOTO
+========================= */
+
+.visitor-photo{
+
+width:70px;
+
+height:70px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:3px solid #0d6efd;
+
+}
+
+/* =========================
+   STATUS COLORS
+========================= */
+
+.status-accepted{
+
+background:#198754;
+
+color:white;
+
+padding:8px 14px;
+
+border-radius:10px;
+
+font-weight:bold;
+
+}
+
+.status-rejected{
+
+background:#dc3545;
+
+color:white;
+
+padding:8px 14px;
+
+border-radius:10px;
+
+font-weight:bold;
+
+}
+
+.status-pending{
+
+background:#ffc107;
+
+color:black;
+
+padding:8px 14px;
+
+border-radius:10px;
+
+font-weight:bold;
+
+}
+
+/* =========================
+   BELL BADGE
+========================= */
+
+.badge{
+
+font-size:12px;
+
+padding:7px 10px;
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+.company-title{
+
+font-size:24px;
+
+}
+
+.company-subtitle{
+
+font-size:10px;
+
+letter-spacing:2px;
+
+}
+
+.logo-box{
+
+width:60px;
+
+height:60px;
+
+}
+
+.registration-card{
+
+padding:20px;
+
+}
+
 }
